@@ -61,6 +61,9 @@ public class DefaultFileSystemProvider {
             return createProvider("sun.nio.fs.SolarisFileSystemProvider");
         if (osname.equals("Linux"))
             return createProvider("sun.nio.fs.LinuxFileSystemProvider");
+        //mymod
+        if (osname.toLowerCase().startsWith("Web-".toLowerCase()))
+            return createProvider("sun.nio.fs.LinuxFileSystemProvider");
         if (osname.contains("OS X"))
             return createProvider("sun.nio.fs.MacOSXFileSystemProvider");
         if (osname.equals("AIX"))

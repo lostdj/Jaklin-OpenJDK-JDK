@@ -32,6 +32,8 @@
 
 #include "fdlibm.h"
 
+//mymod
+#ifndef EMSCRIPTEN
 #ifdef __STDC__
         int ilogb(double x)
 #else
@@ -57,3 +59,5 @@
         else if (hx<0x7ff00000) return (hx>>20)-1023;
         else return 0x7fffffff;
 }
+#endif
+

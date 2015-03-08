@@ -26,6 +26,8 @@
 #include "jni.h"
 #include "jvm.h"
 
+#define JNI_OnLoad libjava_JNI_OnLoad
+
 JNIEXPORT jint JNICALL
 JNI_OnLoad(JavaVM *vm, void *reserved)
 {

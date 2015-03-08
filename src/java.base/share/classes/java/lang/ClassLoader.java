@@ -278,12 +278,14 @@ public abstract class ClassLoader {
 
     private ClassLoader(Void unused, ClassLoader parent) {
         this.parent = parent;
-        if (ParallelLoaders.isRegistered(this.getClass())) {
+        //mymod
+        /*if (ParallelLoaders.isRegistered(this.getClass())) {
             parallelLockMap = new ConcurrentHashMap<>();
             package2certs = new ConcurrentHashMap<>();
             domains = Collections.synchronizedSet(new HashSet<>());
             assertionLock = new Object();
-        } else {
+        } else */{
+        ///mymod
             // no finer-grained lock; lock on the classloader instance
             parallelLockMap = null;
             package2certs = new Hashtable<>();

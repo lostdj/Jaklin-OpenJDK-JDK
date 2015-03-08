@@ -34,14 +34,15 @@
 #include <fcntl.h>
 #include <sys/uio.h>
 #include <unistd.h>
-#if defined(__linux__)
+#if defined(__linux__) /*mymod:added*/&& !defined(EMSCRIPTEN)
 #include <linux/fs.h>
 #include <sys/ioctl.h>
 #endif
 #include "nio.h"
 #include "nio_util.h"
 
-#ifdef _ALLBSD_SOURCE
+//mymod
+#if defined(_ALLBSD_SOURCE) || defined(EMSCRIPTEN)
 #define stat64 stat
 #define flock64 flock
 #define off64_t off_t
@@ -60,9 +61,14 @@ static int preCloseFD = -1;     /* File descriptor to which we dup other fd's
                                    before closing them for real */
 
 
+//mymod
+#include <cph/cph.h>
+
 JNIEXPORT void JNICALL
 Java_sun_nio_ch_FileDispatcherImpl_init(JNIEnv *env, jclass cl)
 {
+    doifdef(_cph_os_web, return);
+
     int sp[2];
     if (socketpair(PF_UNIX, SOCK_STREAM, 0, sp) < 0) {
         JNU_ThrowIOExceptionWithLastError(env, "socketpair failed");

@@ -292,28 +292,29 @@ abstract class SeedGenerator {
                         , e);
             }
 
-            final ThreadGroup[] finalsg = new ThreadGroup[1];
-            Thread t = java.security.AccessController.doPrivileged
-                (new java.security.PrivilegedAction<Thread>() {
-                        @Override
-                        public Thread run() {
-                            ThreadGroup parent, group =
-                                Thread.currentThread().getThreadGroup();
-                            while ((parent = group.getParent()) != null) {
-                                group = parent;
-                            }
-                            finalsg[0] = new ThreadGroup
-                                (group, "SeedGenerator ThreadGroup");
-                            Thread newT = new Thread(finalsg[0],
-                                ThreadedSeedGenerator.this,
-                                "SeedGenerator Thread");
-                            newT.setPriority(Thread.MIN_PRIORITY);
-                            newT.setDaemon(true);
-                            return newT;
-                        }
-                    });
-            seedGroup = finalsg[0];
-            t.start();
+            //mymod
+            // final ThreadGroup[] finalsg = new ThreadGroup[1];
+            // Thread t = java.security.AccessController.doPrivileged
+            //     (new java.security.PrivilegedAction<Thread>() {
+            //             @Override
+            //             public Thread run() {
+            //                 ThreadGroup parent, group =
+            //                     Thread.currentThread().getThreadGroup();
+            //                 while ((parent = group.getParent()) != null) {
+            //                     group = parent;
+            //                 }
+            //                 finalsg[0] = new ThreadGroup
+            //                     (group, "SeedGenerator ThreadGroup");
+            //                 Thread newT = new Thread(finalsg[0],
+            //                     ThreadedSeedGenerator.this,
+            //                     "SeedGenerator Thread");
+            //                 newT.setPriority(Thread.MIN_PRIORITY);
+            //                 newT.setDaemon(true);
+            //                 return newT;
+            //             }
+            //         });
+            // seedGroup = finalsg[0];
+            // t.start();
         }
 
         /**
@@ -393,23 +394,28 @@ abstract class SeedGenerator {
         byte getSeedByte() {
             byte b;
 
-            try {
-                // Wait for it...
-                synchronized(this) {
-                    while (count <= 0) {
-                        wait();
-                    }
-                }
-            } catch (Exception e) {
-                if (count <= 0) {
-                    throw new InternalError("internal error: " +
-                        "SeedGenerator thread generated an exception.", e);
-                }
-            }
+            //mymod
+            // try {
+            //     // Wait for it...
+            //     synchronized(this) {
+            //         while (count <= 0) {
+            //             wait();
+            //         }
+            //     }
+            // } catch (Exception e) {
+            //     if (count <= 0) {
+            //         throw new InternalError("internal error: " +
+            //             "SeedGenerator thread generated an exception.", e);
+            //     }
+            // }
 
             synchronized(this) {
                 // Get it from the queue
-                b = pool[start];
+                //mymod
+                java.util.Random r = new java.util.Random(System.currentTimeMillis());
+                b = (byte)new java.util.Random(r.nextLong()).nextLong();
+                // b = pool[start];
+                ///
                 pool[start] = 0;
                 start++;
                 count--;

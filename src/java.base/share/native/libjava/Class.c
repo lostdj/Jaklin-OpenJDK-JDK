@@ -41,55 +41,192 @@
 extern jboolean VerifyClassname(char *utf_name, jboolean arrayAllowed);
 extern jboolean VerifyFixClassname(char *utf_name);
 
-#define OBJ "Ljava/lang/Object;"
-#define CLS "Ljava/lang/Class;"
-#define CPL "Lsun/reflect/ConstantPool;"
-#define STR "Ljava/lang/String;"
-#define FLD "Ljava/lang/reflect/Field;"
-#define MHD "Ljava/lang/reflect/Method;"
-#define CTR "Ljava/lang/reflect/Constructor;"
-#define PD  "Ljava/security/ProtectionDomain;"
-#define BA  "[B"
+//mymod
+// #define OBJ "Ljava/lang/Object;"
+// #define CLS "Ljava/lang/Class;"
+// #define CPL "Lsun/reflect/ConstantPool;"
+// #define STR "Ljava/lang/String;"
+// #define FLD "Ljava/lang/reflect/Field;"
+// #define MHD "Ljava/lang/reflect/Method;"
+// #define CTR "Ljava/lang/reflect/Constructor;"
+// #define PD  "Ljava/security/ProtectionDomain;"
+// #define BA  "[B"
 
-static JNINativeMethod methods[] = {
-    {"getName0",         "()" STR,          (void *)&JVM_GetClassName},
-    {"getSuperclass",    "()" CLS,          NULL},
-    {"getInterfaces0",   "()[" CLS,         (void *)&JVM_GetClassInterfaces},
-    {"isInterface",      "()Z",             (void *)&JVM_IsInterface},
-    {"getSigners",       "()[" OBJ,         (void *)&JVM_GetClassSigners},
-    {"setSigners",       "([" OBJ ")V",     (void *)&JVM_SetClassSigners},
-    {"isArray",          "()Z",             (void *)&JVM_IsArrayClass},
-    {"isPrimitive",      "()Z",             (void *)&JVM_IsPrimitiveClass},
-    {"getModifiers",     "()I",             (void *)&JVM_GetClassModifiers},
-    {"getDeclaredFields0","(Z)[" FLD,       (void *)&JVM_GetClassDeclaredFields},
-    {"getDeclaredMethods0","(Z)[" MHD,      (void *)&JVM_GetClassDeclaredMethods},
-    {"getDeclaredConstructors0","(Z)[" CTR, (void *)&JVM_GetClassDeclaredConstructors},
-    {"getProtectionDomain0", "()" PD,       (void *)&JVM_GetProtectionDomain},
-    {"getDeclaredClasses0",  "()[" CLS,      (void *)&JVM_GetDeclaredClasses},
-    {"getDeclaringClass0",   "()" CLS,      (void *)&JVM_GetDeclaringClass},
-    {"getGenericSignature0", "()" STR,      (void *)&JVM_GetClassSignature},
-    {"getRawAnnotations",      "()" BA,        (void *)&JVM_GetClassAnnotations},
-    {"getConstantPool",     "()" CPL,       (void *)&JVM_GetClassConstantPool},
-    {"desiredAssertionStatus0","("CLS")Z",(void *)&JVM_DesiredAssertionStatus},
-    {"getEnclosingMethod0", "()[" OBJ,      (void *)&JVM_GetEnclosingMethodInfo},
-    {"getRawTypeAnnotations", "()" BA,      (void *)&JVM_GetClassTypeAnnotations},
-};
+// static JNINativeMethod methods[] = {
+//     {"getName0",         "()" STR,          (void *)&JVM_GetClassName},
+//     {"getSuperclass",    "()" CLS,          NULL},
+//     {"getInterfaces0",   "()[" CLS,         (void *)&JVM_GetClassInterfaces},
+//     {"isInterface",      "()Z",             (void *)&JVM_IsInterface},
+//     {"getSigners",       "()[" OBJ,         (void *)&JVM_GetClassSigners},
+//     {"setSigners",       "([" OBJ ")V",     (void *)&JVM_SetClassSigners},
+//     {"isArray",          "()Z",             (void *)&JVM_IsArrayClass},
+//     {"isPrimitive",      "()Z",             (void *)&JVM_IsPrimitiveClass},
+//     {"getModifiers",     "()I",             (void *)&JVM_GetClassModifiers},
+//     {"getDeclaredFields0","(Z)[" FLD,       (void *)&JVM_GetClassDeclaredFields},
+//     {"getDeclaredMethods0","(Z)[" MHD,      (void *)&JVM_GetClassDeclaredMethods},
+//     {"getDeclaredConstructors0","(Z)[" CTR, (void *)&JVM_GetClassDeclaredConstructors},
+//     {"getProtectionDomain0", "()" PD,       (void *)&JVM_GetProtectionDomain},
+//     {"getDeclaredClasses0",  "()[" CLS,      (void *)&JVM_GetDeclaredClasses},
+//     {"getDeclaringClass0",   "()" CLS,      (void *)&JVM_GetDeclaringClass},
+//     {"getGenericSignature0", "()" STR,      (void *)&JVM_GetClassSignature},
+//     {"getRawAnnotations",      "()" BA,        (void *)&JVM_GetClassAnnotations},
+//     {"getConstantPool",     "()" CPL,       (void *)&JVM_GetClassConstantPool},
+//     {"desiredAssertionStatus0","("CLS")Z",(void *)&JVM_DesiredAssertionStatus},
+//     {"getEnclosingMethod0", "()[" OBJ,      (void *)&JVM_GetEnclosingMethodInfo},
+//     {"getRawTypeAnnotations", "()" BA,      (void *)&JVM_GetClassTypeAnnotations},
+// };
 
-#undef OBJ
-#undef CLS
-#undef STR
-#undef FLD
-#undef MHD
-#undef CTR
-#undef PD
+// #undef OBJ
+// #undef CLS
+// #undef STR
+// #undef FLD
+// #undef MHD
+// #undef CTR
+// #undef PD
 
 JNIEXPORT void JNICALL
 Java_java_lang_Class_registerNatives(JNIEnv *env, jclass cls)
 {
-    methods[1].fnPtr = (void *)(*env)->GetSuperclass;
-    (*env)->RegisterNatives(env, cls, methods,
-                            sizeof(methods)/sizeof(JNINativeMethod));
+    // methods[1].fnPtr = (void *)(*env)->GetSuperclass;
+    // (*env)->RegisterNatives(env, cls, methods,
+    //                         sizeof(methods)/sizeof(JNINativeMethod));
 }
+
+//mymod: jdk8 backport.
+void* JNICALL JVM_GetComponentType(void*, void*);
+JNIEXPORT jclass JNICALL Java_java_lang_Class_getComponentType
+  (JNIEnv *e, jobject o)
+{
+    return JVM_GetComponentType(e, o);
+}
+///mymod
+
+JNIEXPORT jbyteArray JNICALL Java_java_lang_Class_getRawTypeAnnotations
+  (JNIEnv *e, jobject o)
+{
+    return JVM_GetClassTypeAnnotations(e, o);
+}
+
+JNIEXPORT jobjectArray JNICALL Java_java_lang_Class_getEnclosingMethod0
+  (JNIEnv *e, jobject o)
+{
+    return JVM_GetEnclosingMethodInfo(e, o);
+}
+
+JNIEXPORT jboolean JNICALL Java_java_lang_Class_desiredAssertionStatus0
+  (JNIEnv *e, jclass o, jclass a1)
+{
+    return JVM_DesiredAssertionStatus(e, o, a1);
+}
+
+JNIEXPORT jobject JNICALL Java_java_lang_Class_getConstantPool
+  (JNIEnv *e, jobject o)
+{
+    return JVM_GetClassConstantPool(e, o);
+}
+
+JNIEXPORT jbyteArray JNICALL Java_java_lang_Class_getRawAnnotations
+  (JNIEnv *e, jobject o)
+{
+    return JVM_GetClassAnnotations(e, o);
+}
+
+JNIEXPORT jstring JNICALL Java_java_lang_Class_getGenericSignature0
+  (JNIEnv *e, jobject o)
+{
+    return JVM_GetClassSignature(e, o);
+}
+
+JNIEXPORT jclass JNICALL Java_java_lang_Class_getDeclaringClass0
+  (JNIEnv *e, jobject o)
+{
+    return JVM_GetDeclaringClass(e, o);
+}
+
+JNIEXPORT jobjectArray JNICALL Java_java_lang_Class_getDeclaredClasses0
+  (JNIEnv *e, jobject o)
+{
+    return JVM_GetDeclaredClasses(e, o);
+}
+
+JNIEXPORT jobject JNICALL Java_java_lang_Class_getProtectionDomain0
+  (JNIEnv *e, jobject o)
+{
+    return JVM_GetProtectionDomain(e, o);
+}
+
+JNIEXPORT jobjectArray JNICALL Java_java_lang_Class_getDeclaredConstructors0
+  (JNIEnv *e, jobject o, jboolean a1)
+{
+    return JVM_GetClassDeclaredConstructors(e, o, a1);
+}
+
+JNIEXPORT jobjectArray JNICALL Java_java_lang_Class_getDeclaredMethods0
+  (JNIEnv *e, jobject o, jboolean a1)
+{
+    return JVM_GetClassDeclaredMethods(e, o, a1);
+}
+
+JNIEXPORT jobjectArray JNICALL Java_java_lang_Class_getDeclaredFields0
+  (JNIEnv *e, jobject o, jboolean a1)
+{
+    return JVM_GetClassDeclaredFields(e, o, a1);
+}
+
+JNIEXPORT jint JNICALL Java_java_lang_Class_getModifiers
+  (JNIEnv *e, jobject o)
+{
+    return JVM_GetClassModifiers(e, o);
+}
+
+JNIEXPORT jboolean JNICALL Java_java_lang_Class_isPrimitive
+  (JNIEnv *e, jobject o)
+{
+    return JVM_IsPrimitiveClass(e, o);
+}
+
+JNIEXPORT jboolean JNICALL Java_java_lang_Class_isArray
+  (JNIEnv *e, jobject o)
+{
+    return JVM_IsArrayClass(e, o);
+}
+
+JNIEXPORT void JNICALL Java_java_lang_Class_setSigners
+  (JNIEnv *e, jobject o, jobjectArray a1)
+{
+    JVM_SetClassSigners(e, o, a1);
+}
+
+JNIEXPORT jobjectArray JNICALL Java_java_lang_Class_getSigners
+  (JNIEnv * e, jobject o)
+{
+    return JVM_GetClassSigners(e, o);
+}
+
+JNIEXPORT jboolean JNICALL Java_java_lang_Class_isInterface
+  (JNIEnv * e, jobject o)
+{
+    return JVM_IsInterface(e, o);
+}
+
+JNIEXPORT jobjectArray JNICALL Java_java_lang_Class_getInterfaces0
+  (JNIEnv * e, jobject o)
+{
+    return JVM_GetClassInterfaces(e, o);
+}
+
+JNIEXPORT jclass JNICALL Java_java_lang_Class_getSuperclass
+  (JNIEnv *e, jobject o)
+{
+    return (*e)->GetSuperclass(e, o);
+}
+
+JNIEXPORT jstring JNICALL Java_java_lang_Class_getName0
+  (JNIEnv *e, jobject o)
+{
+    return JVM_GetClassName(e, o);
+}
+///mymod
 
 JNIEXPORT jclass JNICALL
 Java_java_lang_Class_forName0(JNIEnv *env, jclass this, jstring classname,

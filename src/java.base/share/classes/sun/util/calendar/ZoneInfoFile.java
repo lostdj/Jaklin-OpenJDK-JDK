@@ -250,16 +250,31 @@ public final class ZoneInfoFile {
         USE_OLDMAPPING = (oldmapping.equals("yes") || oldmapping.equals("true"));
         AccessController.doPrivileged(new PrivilegedAction<Object>() {
             public Object run() {
+                //mymod
+                DataInputStream dis = null;
                 try {
-                    String libDir = System.getProperty("java.home") + File.separator + "lib";
-                    try (DataInputStream dis = new DataInputStream(
-                             new BufferedInputStream(new FileInputStream(
-                                 new File(libDir, "tzdb.dat"))))) {
-                        load(dis);
-                    }
+                    //String libDir = System.getProperty("java.home") + File.separator + "lib";
+                    dis = new DataInputStream(ZoneInfoFile.class.getClassLoader()
+                         .getResourceAsStream("/tzdb.dat"));
+                    load(dis);
+                    // try (DataInputStream dis = new DataInputStream(
+                    //          new BufferedInputStream(new FileInputStream(
+                    //              new File(libDir, "tzdb.dat"))))) {
+                    //     load(dis);
+                    // }
                 } catch (Exception x) {
                     throw new Error(x);
                 }
+                finally
+                {
+                    try
+                    {
+                        if(dis != null)
+                            dis.close();
+                    }
+                    catch(Exception ignored) {}
+                }
+
                 return null;
             }
         });

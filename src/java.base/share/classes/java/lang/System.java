@@ -318,7 +318,8 @@ public final class System {
             });
         }
 
-        security = s;
+        //mymod: commented out.
+        //security = s;
     }
 
     /**
@@ -1077,6 +1078,10 @@ public final class System {
      */
     @CallerSensitive
     public static void load(String filename) {
+        //mymod
+        if(System.getProperty("os.name").toLowerCase().startsWith("Web-".toLowerCase()))
+            return;
+
         Runtime.getRuntime().load0(Reflection.getCallerClass(), filename);
     }
 
@@ -1113,6 +1118,10 @@ public final class System {
      */
     @CallerSensitive
     public static void loadLibrary(String libname) {
+        //mymod
+        if(System.getProperty("os.name").toLowerCase().startsWith("Web-".toLowerCase()))
+            return;
+
         Runtime.getRuntime().loadLibrary0(Reflection.getCallerClass(), libname);
     }
 

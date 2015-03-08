@@ -38,16 +38,25 @@
 extern jboolean VerifyClassname(char *utf_name, jboolean arrayAllowed);
 extern jboolean VerifyFixClassname(char *utf_name);
 
-static JNINativeMethod methods[] = {
-    {"retrieveDirectives",  "()Ljava/lang/AssertionStatusDirectives;", (void *)&JVM_AssertionStatusDirectives}
-};
+//mymod
+// static JNINativeMethod methods[] = {
+    // {"retrieveDirectives",  "()Ljava/lang/AssertionStatusDirectives;", (void *)&JVM_AssertionStatusDirectives}
+// };
 
 JNIEXPORT void JNICALL
 Java_java_lang_ClassLoader_registerNatives(JNIEnv *env, jclass cls)
 {
-    (*env)->RegisterNatives(env, cls, methods,
-                            sizeof(methods)/sizeof(JNINativeMethod));
+    // (*env)->RegisterNatives(env, cls, methods,
+                            // sizeof(methods)/sizeof(JNINativeMethod));
 }
+
+JNIEXPORT jobject JNICALL Java_java_lang_ClassLoader_retrieveDirectives
+  (JNIEnv *e, jclass o)
+{
+    return JVM_AssertionStatusDirectives(e, o);
+}
+
+///mymod
 
 /* Convert java string to UTF char*. Use local buffer if possible,
    otherwise malloc new memory. Returns null IFF malloc failed. */

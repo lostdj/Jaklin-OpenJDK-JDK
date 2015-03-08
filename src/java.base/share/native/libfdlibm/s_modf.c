@@ -36,6 +36,10 @@
 
 #include "fdlibm.h"
 
+//mymod
+#include <cph/cph.h>
+#if !_cph_os_ems
+
 #ifdef __STDC__
 static const double one = 1.0;
 #else
@@ -91,3 +95,7 @@ static double one = 1.0;
             }
         }
 }
+
+//mymod
+#endif // #if !_cps_osems
+

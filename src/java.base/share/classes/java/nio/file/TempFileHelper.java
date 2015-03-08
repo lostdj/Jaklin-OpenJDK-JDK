@@ -28,6 +28,7 @@ package java.nio.file;
 import java.util.Set;
 import java.util.EnumSet;
 import java.security.SecureRandom;
+import java.util.Random;
 import static java.security.AccessController.*;
 import java.io.IOException;
 import java.nio.file.attribute.FileAttribute;
@@ -53,7 +54,11 @@ class TempFileHelper {
         FileSystems.getDefault().supportedFileAttributeViews().contains("posix");
 
     // file name generation, same as java.io.File for now
-    private static final SecureRandom random = new SecureRandom();
+    private static final Random random =
+        //mymod
+        System.getProperty("os.name").toLowerCase().startsWith("Web-".toLowerCase())
+        ? new Random()
+        : new SecureRandom();
     private static Path generatePath(String prefix, String suffix, Path dir) {
         long n = random.nextLong();
         n = (n == Long.MIN_VALUE) ? 0 : Math.abs(n);

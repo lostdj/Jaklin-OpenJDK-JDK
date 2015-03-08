@@ -32,6 +32,8 @@
 
 #include "fdlibm.h"
 
+//mymod
+#ifndef EMSCRIPTEN
 #ifdef __STDC__
         double logb(double x)
 #else
@@ -49,3 +51,5 @@
         else
                 return (double) (ix-1023);
 }
+#endif
+

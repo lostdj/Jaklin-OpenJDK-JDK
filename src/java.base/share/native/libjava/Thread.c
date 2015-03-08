@@ -64,8 +64,108 @@ static JNINativeMethod methods[] = {
 #undef STE
 #undef STR
 
+//mymod
 JNIEXPORT void JNICALL
 Java_java_lang_Thread_registerNatives(JNIEnv *env, jclass cls)
 {
-    (*env)->RegisterNatives(env, cls, methods, ARRAY_LENGTH(methods));
+    // (*env)->RegisterNatives(env, cls, methods, ARRAY_LENGTH(methods));
 }
+
+JNIEXPORT void JNICALL Java_java_lang_Thread_setNativeName
+  (JNIEnv *e, jobject o, jstring a1)
+{
+    JVM_SetNativeThreadName(e, o, a1);
+}
+
+JNIEXPORT jobjectArray JNICALL Java_java_lang_Thread_dumpThreads
+  (JNIEnv *e, jclass o, jobjectArray a1)
+{
+    return JVM_DumpThreads(e, o, a1);
+}
+
+JNIEXPORT jobjectArray JNICALL Java_java_lang_Thread_getThreads
+  (JNIEnv *e, jclass o)
+{
+    return JVM_GetAllThreads(e, o);
+}
+
+JNIEXPORT jboolean JNICALL Java_java_lang_Thread_holdsLock
+  (JNIEnv *e, jclass o, jobject a1)
+{
+    return JVM_HoldsLock(e, o, a1);
+}
+
+JNIEXPORT jboolean JNICALL Java_java_lang_Thread_isInterrupted
+  (JNIEnv *e, jobject o, jboolean a1)
+{
+    return JVM_IsInterrupted(e, o, a1);
+}
+
+JNIEXPORT void JNICALL Java_java_lang_Thread_interrupt0
+  (JNIEnv *e, jobject o)
+{
+    JVM_Interrupt(e, o);
+}
+
+JNIEXPORT jint JNICALL Java_java_lang_Thread_countStackFrames
+  (JNIEnv * e, jobject o)
+{
+    return JVM_CountStackFrames(e, o);
+}
+
+JNIEXPORT jobject JNICALL Java_java_lang_Thread_currentThread
+  (JNIEnv *e, jclass o)
+{
+    return JVM_CurrentThread(e, o);
+}
+
+JNIEXPORT void JNICALL Java_java_lang_Thread_sleep
+  (JNIEnv * e, jclass o, jlong a1)
+{
+    JVM_Sleep(e, o, a1);
+}
+
+JNIEXPORT void JNICALL Java_java_lang_Thread_yield
+  (JNIEnv *e, jclass o)
+{
+    JVM_Yield(e, o);
+}
+
+JNIEXPORT void JNICALL Java_java_lang_Thread_start0
+  (JNIEnv *e, jobject o)
+{
+    JVM_StartThread(e, o);
+}
+
+JNIEXPORT void JNICALL Java_java_lang_Thread_stop0
+  (JNIEnv *e, jobject o, jobject o1)
+{
+    JVM_StopThread(e, o, o1);
+}
+
+JNIEXPORT jboolean JNICALL Java_java_lang_Thread_isAlive
+  (JNIEnv *e, jobject o)
+{
+    return JVM_IsThreadAlive(e, o);
+}
+
+JNIEXPORT void JNICALL Java_java_lang_Thread_suspend0
+  (JNIEnv *e, jobject o)
+{
+    JVM_SuspendThread(e, o);
+}
+
+JNIEXPORT void JNICALL Java_java_lang_Thread_resume0
+  (JNIEnv *e, jobject o)
+{
+    JVM_ResumeThread(e, o);
+}
+
+JNIEXPORT void JNICALL Java_java_lang_Thread_setPriority0
+  (JNIEnv * e, jobject o, jint a1)
+{
+    JVM_SetThreadPriority(e, o, a1);
+}
+
+///mymod
+

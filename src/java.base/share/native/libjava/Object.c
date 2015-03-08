@@ -39,20 +39,52 @@
 
 #include "java_lang_Object.h"
 
-static JNINativeMethod methods[] = {
-    {"hashCode",    "()I",                    (void *)&JVM_IHashCode},
-    {"wait",        "(J)V",                   (void *)&JVM_MonitorWait},
-    {"notify",      "()V",                    (void *)&JVM_MonitorNotify},
-    {"notifyAll",   "()V",                    (void *)&JVM_MonitorNotifyAll},
-    {"clone",       "()Ljava/lang/Object;",   (void *)&JVM_Clone},
-};
+//mymod
+// static JNINativeMethod methods[] = {
+//     {"hashCode",    "()I",                    (void *)&JVM_IHashCode},
+//     {"wait",        "(J)V",                   (void *)&JVM_MonitorWait},
+//     {"notify",      "()V",                    (void *)&JVM_MonitorNotify},
+//     {"notifyAll",   "()V",                    (void *)&JVM_MonitorNotifyAll},
+//     {"clone",       "()Ljava/lang/Object;",   (void *)&JVM_Clone},
+// };
 
 JNIEXPORT void JNICALL
 Java_java_lang_Object_registerNatives(JNIEnv *env, jclass cls)
 {
-    (*env)->RegisterNatives(env, cls,
-                            methods, sizeof(methods)/sizeof(methods[0]));
+    // (*env)->RegisterNatives(env, cls,
+                            // methods, sizeof(methods)/sizeof(methods[0]));
 }
+
+JNIEXPORT jint JNICALL Java_java_lang_Object_hashCode
+  (JNIEnv *e, jobject o)
+{
+    return JVM_IHashCode(e, o);
+}
+
+JNIEXPORT void JNICALL Java_java_lang_Object_wait
+  (JNIEnv *e, jobject o, jlong a1)
+{
+    JVM_MonitorWait(e, o, a1);
+}
+
+JNIEXPORT void JNICALL Java_java_lang_Object_notify
+  (JNIEnv *e, jobject o)
+{
+    JVM_MonitorNotify(e, o);
+}
+
+JNIEXPORT void JNICALL Java_java_lang_Object_notifyAll
+  (JNIEnv *e, jobject o)
+{
+    JVM_MonitorNotifyAll(e, o);
+}
+
+JNIEXPORT jobject JNICALL Java_java_lang_Object_clone
+  (JNIEnv *e, jobject o)
+{
+    return JVM_Clone(e, o);
+}
+
 
 JNIEXPORT jclass JNICALL
 Java_java_lang_Object_getClass(JNIEnv *env, jobject this)

@@ -34,6 +34,9 @@ const JmmInterface* jmm_interface = NULL;
 JavaVM* jvm = NULL;
 jint jmm_version = 0;
 
+//mymod: avn
+#define JNI_OnLoad management_JNI_OnLoad
+
 JNIEXPORT jint JNICALL
    JNI_OnLoad(JavaVM *vm, void *reserved) {
     JNIEnv* env;

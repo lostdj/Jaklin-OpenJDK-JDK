@@ -29,6 +29,9 @@
 
 #include "fdlibm.h"
 
+//mymod
+#include <cph/cph.h>
+#if !_cph_os_ems
 
 #ifdef __STDC__
         double atanh(double x)          /* wrapper atanh */
@@ -53,3 +56,7 @@
             return z;
 #endif
 }
+
+//mymod
+#endif // #if !_cps_osems
+

@@ -43,6 +43,8 @@ twom54  =  5.55111512312578270212e-17, /* 0x3C900000, 0x00000000 */
 huge   = 1.0e+300,
 tiny   = 1.0e-300;
 
+//mymod
+#ifndef EMSCRIPTEN
 #ifdef __STDC__
         double scalbn (double x, int n)
 #else
@@ -75,3 +77,5 @@ tiny   = 1.0e-300;
         __HI(x) = (hx&0x800fffff)|(k<<20);
         return x*twom54;
 }
+#endif
+

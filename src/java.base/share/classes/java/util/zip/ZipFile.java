@@ -567,7 +567,15 @@ class ZipFile implements ZipConstants, Closeable {
                 e.name = zc.toString(bname, bname.length);
             }
         }
+        //mymod: timezones may not be loaded yet.
+        // And, they may be loaded from jar file,
+        // which can request Date class instance,
+        // which, will request current def tz.
+        try
+        {
         e.time = dosToJavaTime(getEntryTime(jzentry));
+        }
+        catch(Throwable ignored) {}
         e.crc = getEntryCrc(jzentry);
         e.size = getEntrySize(jzentry);
         e.csize = getEntryCSize(jzentry);

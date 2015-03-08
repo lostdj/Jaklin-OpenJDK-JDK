@@ -95,14 +95,17 @@ public class URLJarFile extends JarFile {
     }
 
     private static boolean isFileURL(URL url) {
-        if (url.getProtocol().equalsIgnoreCase("file")) {
+        if (url.getProtocol().equalsIgnoreCase("file")
+                //mymod
+                || url.getProtocol().equalsIgnoreCase("mem")) {
             /*
              * Consider this a 'file' only if it's a LOCAL file, because
              * 'file:' URLs can be accessible through ftp.
              */
             String host = url.getHost();
-            if (host == null || host.equals("") || host.equals("~") ||
-                host.equalsIgnoreCase("localhost"))
+            if (host == null || host.equals("") || host.equals("~")
+                    || host.equalsIgnoreCase("localhost")
+                    /*mymod*/ || url.getProtocol().equalsIgnoreCase("mem"))
                 return true;
         }
         return false;
@@ -211,10 +214,13 @@ public class URLJarFile extends JarFile {
             JarFile result = null;
 
             /* get the stream before asserting privileges */
-            try (final InputStream in = url.openConnection().getInputStream()) {
-                result = AccessController.doPrivileged(
-                    new PrivilegedExceptionAction<JarFile>() {
-                        public JarFile run() throws IOException {
+            //mymod
+            InputStream in = null;
+            try /*(final InputStream in = url.openConnection().getInputStream()) */{
+                // result = AccessController.doPrivileged(
+                //     new PrivilegedExceptionAction<JarFile>() {
+                //         public JarFile run() throws IOException {
+                            in = url.openConnection().getInputStream();
                             Path tmpFile = Files.createTempFile("jar_cache", null);
                             try {
                                 Files.copy(in, tmpFile, StandardCopyOption.REPLACE_EXISTING);
@@ -229,13 +235,32 @@ public class URLJarFile extends JarFile {
                                 }
                                 throw thr;
                             }
-                        }
-                    });
-            } catch (PrivilegedActionException pae) {
-                throw (IOException) pae.getException();
+                            finally
+                            {
+                                if(in != null)
+                                    try
+                                    {
+                                        in.close();
+                                    }
+                                    catch(Exception ignored) {}
+                            }
+                        // }
+                    //});
+            } catch (/*PrivilegedActionException*/Exception pae) {
+                throw new IOException(pae);
+                // throw (IOException) pae.getException();
+            }
+            finally
+            {
+                if(in != null)
+                    try
+                    {
+                        in.close();
+                    }
+                    catch(Exception ignored) {}
             }
 
-            return result;
+            // return result;
         }
     }
 

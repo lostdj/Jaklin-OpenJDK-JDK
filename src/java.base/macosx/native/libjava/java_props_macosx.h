@@ -30,3 +30,42 @@ void setOSNameAndVersion(java_props_t *sprops);
 void setUserHome(java_props_t *sprops);
 void setProxyProperties(java_props_t *sProps);
 int isInAquaSession();
+
+//mymod: avn
+#include <cph/cph.h>
+
+#ifdef _myavn_management_ios
+PreferredToolkit
+getPreferredToolkit()
+{
+  return XToolkit;
+}
+
+void
+setOSNameAndVersion(java_props_t* props)
+{
+  props->os_name = strdup("iOS");
+  props->os_version = strdup("Unknown");
+}
+
+void
+setProxyProperties(java_props_t* props)
+{
+  // ignore
+}
+
+void
+setUserHome(java_props_t* props)
+{
+  // ignore
+}
+
+char*
+setupMacOSXLocale(int cat)
+{
+  return 0;
+}
+
+char* environ[0];
+#endif
+

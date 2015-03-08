@@ -27,6 +27,8 @@
 #include "fdlibm.h"
 #include <errno.h>
 
+//mymod
+#ifndef EMSCRIPTEN
 #ifdef __STDC__
         double ldexp(double value, int exp)
 #else
@@ -39,3 +41,5 @@
         if(!finite(value)||value==0.0) errno = ERANGE;
         return value;
 }
+#endif
+

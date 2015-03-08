@@ -47,7 +47,13 @@
 
 #ifdef __linux__
 #include <sys/ioctl.h>
-#include <bits/ioctls.h>
+    //mymod: added
+    #ifndef EMSCRIPTEN
+        #include <bits/ioctls.h>
+    #else
+        //#include <bits/ioctl.h>
+    #endif
+    ///mymod
 #include <sys/utsname.h>
 #include <stdio.h>
 #endif

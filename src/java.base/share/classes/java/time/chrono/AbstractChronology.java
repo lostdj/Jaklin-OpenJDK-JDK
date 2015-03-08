@@ -105,6 +105,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import sun.util.logging.PlatformLogger;
 
+//mymod: lambda -> plain old class.
+
 /**
  * An abstract implementation of a calendar system, used to organize and identify dates.
  * <p>
@@ -130,30 +132,39 @@ public abstract class AbstractChronology implements Chronology {
      * ChronoLocalDate order constant.
      */
     static final Comparator<ChronoLocalDate> DATE_ORDER =
-        (Comparator<ChronoLocalDate> & Serializable) (date1, date2) -> {
-            return Long.compare(date1.toEpochDay(), date2.toEpochDay());
-        };
+            (Comparator<ChronoLocalDate>) new Comparator<ChronoLocalDate>() {
+                @Override
+                public int compare(ChronoLocalDate date1, ChronoLocalDate date2) {
+                    return Long.compare(date1.toEpochDay(), date2.toEpochDay());
+                }
+            };
     /**
      * ChronoLocalDateTime order constant.
      */
     static final Comparator<ChronoLocalDateTime<? extends ChronoLocalDate>> DATE_TIME_ORDER =
-        (Comparator<ChronoLocalDateTime<? extends ChronoLocalDate>> & Serializable) (dateTime1, dateTime2) -> {
-            int cmp = Long.compare(dateTime1.toLocalDate().toEpochDay(), dateTime2.toLocalDate().toEpochDay());
-            if (cmp == 0) {
-                cmp = Long.compare(dateTime1.toLocalTime().toNanoOfDay(), dateTime2.toLocalTime().toNanoOfDay());
-            }
-            return cmp;
-        };
+            (Comparator<ChronoLocalDateTime<? extends ChronoLocalDate>>) new Comparator<ChronoLocalDateTime<? extends ChronoLocalDate>>() {
+                @Override
+                public int compare(ChronoLocalDateTime<? extends ChronoLocalDate> dateTime1, ChronoLocalDateTime<? extends ChronoLocalDate> dateTime2) {
+                    int cmp = Long.compare(dateTime1.toLocalDate().toEpochDay(), dateTime2.toLocalDate().toEpochDay());
+                    if (cmp == 0) {
+                        cmp = Long.compare(dateTime1.toLocalTime().toNanoOfDay(), dateTime2.toLocalTime().toNanoOfDay());
+                    }
+                    return cmp;
+                }
+            };
     /**
      * ChronoZonedDateTime order constant.
      */
     static final Comparator<ChronoZonedDateTime<?>> INSTANT_ORDER =
-            (Comparator<ChronoZonedDateTime<?>> & Serializable) (dateTime1, dateTime2) -> {
-                int cmp = Long.compare(dateTime1.toEpochSecond(), dateTime2.toEpochSecond());
-                if (cmp == 0) {
-                    cmp = Long.compare(dateTime1.toLocalTime().getNano(), dateTime2.toLocalTime().getNano());
+            (Comparator<ChronoZonedDateTime<?>>) new Comparator<ChronoZonedDateTime<?>>() {
+                @Override
+                public int compare(ChronoZonedDateTime<?> dateTime1, ChronoZonedDateTime<?> dateTime2) {
+                    int cmp = Long.compare(dateTime1.toEpochSecond(), dateTime2.toEpochSecond());
+                    if (cmp == 0) {
+                        cmp = Long.compare(dateTime1.toLocalTime().getNano(), dateTime2.toLocalTime().getNano());
+                    }
+                    return cmp;
                 }
-                return cmp;
             };
 
     /**

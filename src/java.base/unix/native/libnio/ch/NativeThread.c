@@ -55,6 +55,8 @@ nullHandler(int sig)
 {
 }
 
+//mymod
+#ifndef EMSCRIPTEN
 JNIEXPORT void JNICALL
 Java_sun_nio_ch_NativeThread_init(JNIEnv *env, jclass cl)
 {
@@ -73,6 +75,13 @@ Java_sun_nio_ch_NativeThread_init(JNIEnv *env, jclass cl)
     if (sigaction(INTERRUPT_SIGNAL, &sa, &osa) < 0)
         JNU_ThrowIOExceptionWithLastError(env, "sigaction");
 }
+#else
+JNIEXPORT void JNICALL
+Java_sun_nio_ch_NativeThread_init(JNIEnv *env, jclass cl)
+{
+  //
+}
+#endif
 
 JNIEXPORT jlong JNICALL
 Java_sun_nio_ch_NativeThread_current(JNIEnv *env, jclass cl)
@@ -84,6 +93,8 @@ Java_sun_nio_ch_NativeThread_current(JNIEnv *env, jclass cl)
 #endif
 }
 
+//mymod
+#ifndef EMSCRIPTEN
 JNIEXPORT void JNICALL
 Java_sun_nio_ch_NativeThread_signal(JNIEnv *env, jclass cl, jlong thread)
 {
@@ -96,3 +107,5 @@ Java_sun_nio_ch_NativeThread_signal(JNIEnv *env, jclass cl, jlong thread)
     if (ret != 0)
         JNU_ThrowIOExceptionWithLastError(env, "Thread signal failed");
 }
+#endif
+

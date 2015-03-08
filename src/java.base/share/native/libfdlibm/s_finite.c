@@ -31,6 +31,10 @@
 
 #include "fdlibm.h"
 
+//mymod
+#include <cph/cph.h>
+#if !_cph_os_ems
+
 #ifdef __STDC__
         int finite(double x)
 #else
@@ -42,3 +46,7 @@
         hx = __HI(x);
         return  (unsigned)((hx&0x7fffffff)-0x7ff00000)>>31;
 }
+
+//mymod
+#endif // #if !_cps_osems
+

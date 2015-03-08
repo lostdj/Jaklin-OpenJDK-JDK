@@ -32,6 +32,10 @@
 
 #include "fdlibm.h"
 
+//mymod
+#include <cph/cph.h>
+#if !_cph_os_ems
+
 #ifdef __STDC__
         double copysign(double x, double y)
 #else
@@ -42,3 +46,7 @@
         __HI(x) = (__HI(x)&0x7fffffff)|(__HI(y)&0x80000000);
         return x;
 }
+
+//mymod
+#endif // #if !_cps_osems
+

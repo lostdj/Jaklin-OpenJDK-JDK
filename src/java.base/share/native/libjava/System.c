@@ -32,23 +32,43 @@
 
 #include "java_lang_System.h"
 
-#define OBJ "Ljava/lang/Object;"
+//mymod
+// #define OBJ "Ljava/lang/Object;"
 
 /* Only register the performance-critical methods */
-static JNINativeMethod methods[] = {
-    {"currentTimeMillis", "()J",              (void *)&JVM_CurrentTimeMillis},
-    {"nanoTime",          "()J",              (void *)&JVM_NanoTime},
-    {"arraycopy",     "(" OBJ "I" OBJ "II)V", (void *)&JVM_ArrayCopy},
-};
+// static JNINativeMethod methods[] = {
+//     {"currentTimeMillis", "()J",              (void *)&JVM_CurrentTimeMillis},
+//     {"nanoTime",          "()J",              (void *)&JVM_NanoTime},
+//     {"arraycopy",     "(" OBJ "I" OBJ "II)V", (void *)&JVM_ArrayCopy},
+// };
 
-#undef OBJ
+// #undef OBJ
 
 JNIEXPORT void JNICALL
 Java_java_lang_System_registerNatives(JNIEnv *env, jclass cls)
 {
-    (*env)->RegisterNatives(env, cls,
-                            methods, sizeof(methods)/sizeof(methods[0]));
+    // (*env)->RegisterNatives(env, cls,
+    //                         methods, sizeof(methods)/sizeof(methods[0]));
 }
+
+JNIEXPORT jlong JNICALL Java_java_lang_System_currentTimeMillis
+  (JNIEnv *e, jclass o)
+{
+    return JVM_CurrentTimeMillis(e, o);
+}
+
+JNIEXPORT jlong JNICALL Java_java_lang_System_nanoTime
+  (JNIEnv *e, jclass o)
+{
+    return JVM_NanoTime(e, o);
+}
+
+JNIEXPORT void JNICALL Java_java_lang_System_arraycopy
+  (JNIEnv *e, jclass o, jobject a1, jint a2, jobject a3, jint a4, jint a5)
+{
+    JVM_ArrayCopy(e, o, a1, a2, a3, a4, a5);
+}
+///mymod
 
 JNIEXPORT jint JNICALL
 Java_java_lang_System_identityHashCode(JNIEnv *env, jobject this, jobject x)

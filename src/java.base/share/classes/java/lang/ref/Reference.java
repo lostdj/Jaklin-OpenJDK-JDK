@@ -229,7 +229,9 @@ public abstract class Reference<T> {
          */
         handler.setPriority(Thread.MAX_PRIORITY);
         handler.setDaemon(true);
-        handler.start();
+        //mymod: commented out.
+        //handler.start();
+        ///mymod
 
         // provide access in SharedSecrets
         SharedSecrets.setJavaLangRefAccess(new JavaLangRefAccess() {

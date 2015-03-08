@@ -295,7 +295,12 @@ public final class AccessController {
      */
 
     @CallerSensitive
-    public static native <T> T doPrivileged(PrivilegedAction<T> action);
+    //mymod
+    // public static native <T> T doPrivileged(PrivilegedAction<T> action);
+    public static <T> T doPrivileged(PrivilegedAction<T> action)
+    {
+        return action.run();
+    }
 
     /**
      * Performs the specified {@code PrivilegedAction} with privileges
@@ -323,14 +328,19 @@ public final class AccessController {
      * @since 1.6
      */
     @CallerSensitive
-    public static <T> T doPrivilegedWithCombiner(PrivilegedAction<T> action) {
-        AccessControlContext acc = getStackAccessControlContext();
-        if (acc == null) {
-            return AccessController.doPrivileged(action);
-        }
-        DomainCombiner dc = acc.getAssignedCombiner();
-        return AccessController.doPrivileged(action,
-                                             preserveCombiner(dc, Reflection.getCallerClass()));
+    //mymod
+    // public static <T> T doPrivilegedWithCombiner(PrivilegedAction<T> action) {
+    //     AccessControlContext acc = getStackAccessControlContext();
+    //     if (acc == null) {
+    //         return AccessController.doPrivileged(action);
+    //     }
+    //     DomainCombiner dc = acc.getAssignedCombiner();
+    //     return AccessController.doPrivileged(action,
+    //                                          preserveCombiner(dc, Reflection.getCallerClass()));
+    // }
+    public static <T> T doPrivilegedWithCombiner(PrivilegedAction<T> action)
+    {
+        return action.run();
     }
 
 
@@ -368,8 +378,13 @@ public final class AccessController {
      * @see #doPrivileged(PrivilegedExceptionAction,AccessControlContext)
      */
     @CallerSensitive
-    public static native <T> T doPrivileged(PrivilegedAction<T> action,
-                                            AccessControlContext context);
+    //mymod
+    // public static native <T> T doPrivileged(PrivilegedAction<T> action,
+    //                                         AccessControlContext context);
+    public static <T> T doPrivileged(PrivilegedAction<T> action, AccessControlContext c)
+    {
+        return action.run();
+    }
 
 
     /**
@@ -417,16 +432,21 @@ public final class AccessController {
      * @since 1.8
      */
     @CallerSensitive
-    public static <T> T doPrivileged(PrivilegedAction<T> action,
-        AccessControlContext context, Permission... perms) {
+    //mymod
+    // public static <T> T doPrivileged(PrivilegedAction<T> action,
+    //     AccessControlContext context, Permission... perms) {
 
-        AccessControlContext parent = getContext();
-        if (perms == null) {
-            throw new NullPointerException("null permissions parameter");
-        }
-        Class <?> caller = Reflection.getCallerClass();
-        return AccessController.doPrivileged(action, createWrapper(null,
-            caller, parent, context, perms));
+    //     AccessControlContext parent = getContext();
+    //     if (perms == null) {
+    //         throw new NullPointerException("null permissions parameter");
+    //     }
+    //     Class <?> caller = Reflection.getCallerClass();
+    //     return AccessController.doPrivileged(action, createWrapper(null,
+    //         caller, parent, context, perms));
+    // }
+    public static <T> T doPrivileged(PrivilegedAction<T> action, AccessControlContext context, Permission... perms)
+    {
+        return action.run();
     }
 
 
@@ -479,20 +499,25 @@ public final class AccessController {
      * @since 1.8
      */
     @CallerSensitive
-    public static <T> T doPrivilegedWithCombiner(PrivilegedAction<T> action,
-        AccessControlContext context, Permission... perms) {
+    //mymod
+    // public static <T> T doPrivilegedWithCombiner(PrivilegedAction<T> action,
+    //     AccessControlContext context, Permission... perms) {
 
-        AccessControlContext parent = getContext();
-        DomainCombiner dc = parent.getCombiner();
-        if (dc == null && context != null) {
-            dc = context.getCombiner();
-        }
-        if (perms == null) {
-            throw new NullPointerException("null permissions parameter");
-        }
-        Class <?> caller = Reflection.getCallerClass();
-        return AccessController.doPrivileged(action, createWrapper(dc, caller,
-            parent, context, perms));
+    //     AccessControlContext parent = getContext();
+    //     DomainCombiner dc = parent.getCombiner();
+    //     if (dc == null && context != null) {
+    //         dc = context.getCombiner();
+    //     }
+    //     if (perms == null) {
+    //         throw new NullPointerException("null permissions parameter");
+    //     }
+    //     Class <?> caller = Reflection.getCallerClass();
+    //     return AccessController.doPrivileged(action, createWrapper(dc, caller,
+    //         parent, context, perms));
+    // }
+    public static <T> T doPrivilegedWithCombiner(PrivilegedAction<T> action, AccessControlContext context, Permission... perms)
+    {
+        return action.run();
     }
 
     /**
@@ -523,9 +548,21 @@ public final class AccessController {
      * @see java.security.DomainCombiner
      */
     @CallerSensitive
-    public static native <T> T
-        doPrivileged(PrivilegedExceptionAction<T> action)
-        throws PrivilegedActionException;
+    //mymod
+    // public static native <T> T
+    //     doPrivileged(PrivilegedExceptionAction<T> action)
+    //     throws PrivilegedActionException;
+    public static <T> T doPrivileged(PrivilegedExceptionAction<T> action) throws PrivilegedActionException
+    {
+        try
+        {
+            return action.run();
+        }
+        catch(Exception e)
+        {
+            throw new PrivilegedActionException(e);
+        }
+    }
 
 
     /**
@@ -560,13 +597,15 @@ public final class AccessController {
     public static <T> T doPrivilegedWithCombiner(PrivilegedExceptionAction<T> action)
         throws PrivilegedActionException
     {
-        AccessControlContext acc = getStackAccessControlContext();
-        if (acc == null) {
-            return AccessController.doPrivileged(action);
-        }
-        DomainCombiner dc = acc.getAssignedCombiner();
-        return AccessController.doPrivileged(action,
-                                             preserveCombiner(dc, Reflection.getCallerClass()));
+        //mymod
+        return doPrivileged(action);
+        // AccessControlContext acc = getStackAccessControlContext();
+        // if (acc == null) {
+        //     return AccessController.doPrivileged(action);
+        // }
+        // DomainCombiner dc = acc.getAssignedCombiner();
+        // return AccessController.doPrivileged(action,
+        //                                      preserveCombiner(dc, Reflection.getCallerClass()));
     }
 
     /**
@@ -658,10 +697,18 @@ public final class AccessController {
      * @see #doPrivileged(PrivilegedAction,AccessControlContext)
      */
     @CallerSensitive
-    public static native <T> T
+    //mymod
+    // public static native <T> T
+    //     doPrivileged(PrivilegedExceptionAction<T> action,
+    //                  AccessControlContext context)
+    //     throws PrivilegedActionException;
+    public static <T> T
         doPrivileged(PrivilegedExceptionAction<T> action,
                      AccessControlContext context)
-        throws PrivilegedActionException;
+        throws PrivilegedActionException
+    {
+        return doPrivileged(action);
+    }
 
 
     /**
@@ -715,12 +762,14 @@ public final class AccessController {
                                      AccessControlContext context, Permission... perms)
         throws PrivilegedActionException
     {
-        AccessControlContext parent = getContext();
-        if (perms == null) {
-            throw new NullPointerException("null permissions parameter");
-        }
-        Class <?> caller = Reflection.getCallerClass();
-        return AccessController.doPrivileged(action, createWrapper(null, caller, parent, context, perms));
+        //mymod
+        return doPrivileged(action);
+        // AccessControlContext parent = getContext();
+        // if (perms == null) {
+        //     throw new NullPointerException("null permissions parameter");
+        // }
+        // Class <?> caller = Reflection.getCallerClass();
+        // return AccessController.doPrivileged(action, createWrapper(null, caller, parent, context, perms));
     }
 
 
@@ -780,17 +829,19 @@ public final class AccessController {
                                                  Permission... perms)
         throws PrivilegedActionException
     {
-        AccessControlContext parent = getContext();
-        DomainCombiner dc = parent.getCombiner();
-        if (dc == null && context != null) {
-            dc = context.getCombiner();
-        }
-        if (perms == null) {
-            throw new NullPointerException("null permissions parameter");
-        }
-        Class <?> caller = Reflection.getCallerClass();
-        return AccessController.doPrivileged(action, createWrapper(dc, caller,
-            parent, context, perms));
+        //mymod
+        return doPrivileged(action);
+        // AccessControlContext parent = getContext();
+        // DomainCombiner dc = parent.getCombiner();
+        // if (dc == null && context != null) {
+        //     dc = context.getCombiner();
+        // }
+        // if (perms == null) {
+        //     throw new NullPointerException("null permissions parameter");
+        // }
+        // Class <?> caller = Reflection.getCallerClass();
+        // return AccessController.doPrivileged(action, createWrapper(dc, caller,
+        //     parent, context, perms));
     }
 
     /**
@@ -861,36 +912,37 @@ public final class AccessController {
         //System.err.println("checkPermission "+perm);
         //Thread.currentThread().dumpStack();
 
-        if (perm == null) {
-            throw new NullPointerException("permission can't be null");
-        }
+        //mymod
+        // if (perm == null) {
+        //     throw new NullPointerException("permission can't be null");
+        // }
 
-        AccessControlContext stack = getStackAccessControlContext();
-        // if context is null, we had privileged system code on the stack.
-        if (stack == null) {
-            Debug debug = AccessControlContext.getDebug();
-            boolean dumpDebug = false;
-            if (debug != null) {
-                dumpDebug = !Debug.isOn("codebase=");
-                dumpDebug &= !Debug.isOn("permission=") ||
-                    Debug.isOn("permission=" + perm.getClass().getCanonicalName());
-            }
+        // AccessControlContext stack = getStackAccessControlContext();
+        // // if context is null, we had privileged system code on the stack.
+        // if (stack == null) {
+        //     Debug debug = AccessControlContext.getDebug();
+        //     boolean dumpDebug = false;
+        //     if (debug != null) {
+        //         dumpDebug = !Debug.isOn("codebase=");
+        //         dumpDebug &= !Debug.isOn("permission=") ||
+        //             Debug.isOn("permission=" + perm.getClass().getCanonicalName());
+        //     }
 
-            if (dumpDebug && Debug.isOn("stack")) {
-                Thread.dumpStack();
-            }
+        //     if (dumpDebug && Debug.isOn("stack")) {
+        //         Thread.dumpStack();
+        //     }
 
-            if (dumpDebug && Debug.isOn("domain")) {
-                debug.println("domain (context is null)");
-            }
+        //     if (dumpDebug && Debug.isOn("domain")) {
+        //         debug.println("domain (context is null)");
+        //     }
 
-            if (dumpDebug) {
-                debug.println("access allowed "+perm);
-            }
-            return;
-        }
+        //     if (dumpDebug) {
+        //         debug.println("access allowed "+perm);
+        //     }
+        //     return;
+        // }
 
-        AccessControlContext acc = stack.optimize();
-        acc.checkPermission(perm);
+        // AccessControlContext acc = stack.optimize();
+        // acc.checkPermission(perm);
     }
 }

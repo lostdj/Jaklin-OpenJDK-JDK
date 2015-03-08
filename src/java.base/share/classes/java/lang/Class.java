@@ -71,6 +71,8 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Proxy;
 import sun.reflect.annotation.*;
 import sun.reflect.misc.ReflectUtil;
+//mymod
+import sun.reflect.Reflection;
 
 /**
  * Instances of the class {@code Class} represent classes and
@@ -333,21 +335,25 @@ public final class Class<T> implements java.io.Serializable,
                                    ClassLoader loader)
         throws ClassNotFoundException
     {
-        Class<?> caller = null;
-        SecurityManager sm = System.getSecurityManager();
-        if (sm != null) {
-            // Reflective call to get caller class is only needed if a security manager
-            // is present.  Avoid the overhead of making this call otherwise.
-            caller = Reflection.getCallerClass();
-            if (sun.misc.VM.isSystemDomainLoader(loader)) {
-                ClassLoader ccl = ClassLoader.getClassLoader(caller);
-                if (!sun.misc.VM.isSystemDomainLoader(ccl)) {
-                    sm.checkPermission(
-                        SecurityConstants.GET_CLASSLOADER_PERMISSION);
-                }
-            }
-        }
-        return forName0(name, initialize, loader, caller);
+        //mymod: fuck that buggy shit.
+        Class<?> caller = Reflection.getCallerClass();
+        return forName0(name, true, loader, caller);
+        // return forName0(name, true, ClassLoader.getClassLoader(caller), caller);
+        // Class<?> caller = null;
+        // SecurityManager sm = System.getSecurityManager();
+        // if (sm != null) {
+        //     // Reflective call to get caller class is only needed if a security manager
+        //     // is present.  Avoid the overhead of making this call otherwise.
+        //     caller = Reflection.getCallerClass();
+        //     if (sun.misc.VM.isSystemDomainLoader(loader)) {
+        //         ClassLoader ccl = ClassLoader.getClassLoader(caller);
+        //         if (!sun.misc.VM.isSystemDomainLoader(ccl)) {
+        //             sm.checkPermission(
+        //                 SecurityConstants.GET_CLASSLOADER_PERMISSION);
+        //         }
+        //     }
+        // }
+        // return forName0(name, initialize, loader, caller);
     }
 
     /** Called after security check for system loader access checks have been made. */
@@ -676,19 +682,21 @@ public final class Class<T> implements java.io.Serializable,
      * @see java.lang.RuntimePermission
      */
     @CallerSensitive
-    public ClassLoader getClassLoader() {
-        ClassLoader cl = getClassLoader0();
-        if (cl == null)
-            return null;
-        SecurityManager sm = System.getSecurityManager();
-        if (sm != null) {
-            ClassLoader.checkClassLoaderPermission(cl, Reflection.getCallerClass());
-        }
-        return cl;
-    }
+    //mymod
+    public native ClassLoader getClassLoader();
+    // public ClassLoader getClassLoader() {
+    //     ClassLoader cl = getClassLoader0();
+    //     if (cl == null)
+    //         return null;
+    //     SecurityManager sm = System.getSecurityManager();
+    //     if (sm != null) {
+    //         ClassLoader.checkClassLoaderPermission(cl, Reflection.getCallerClass());
+    //     }
+    //     return cl;
+    // }
 
     // Package-private to allow ClassLoader access
-    ClassLoader getClassLoader0() { return classLoader; }
+    ClassLoader getClassLoader0() { /*mymod*//*return classLoader;*/return getClassLoader(); }
 
     // Initialized in JVM not by private constructor
     private final ClassLoader classLoader;
@@ -924,16 +932,20 @@ public final class Class<T> implements java.io.Serializable,
      * @see     java.lang.reflect.Array
      * @since 1.1
      */
-    public Class<?> getComponentType() {
-        // Only return for array types. Storage may be reused for Class for instance types.
-        if (isArray()) {
-            return componentType;
-        } else {
-            return null;
-        }
-    }
+    //mymod: jdk8 backport.
+    public native Class<?> getComponentType();
+    // public Class<?> getComponentType() {
+    //     // Only return for array types. Storage may be reused for Class for instance types.
+    //     if (isArray()) {
+    //         return componentType;
+    //     } else {
+    //         return null;
+    //     }
+    // }
 
+    //MYTODO: I can comment out this?
     private final Class<?> componentType;
+    ///mymod
 
 
     /**
@@ -2228,7 +2240,23 @@ public final class Class<T> implements java.io.Serializable,
             // A system class.
             return ClassLoader.getSystemResourceAsStream(name);
         }
-        return cl.getResourceAsStream(name);
+        //mymod
+        InputStream is = cl.getResourceAsStream(name);
+        if(is == null)
+        {
+            Class<?> caller = Reflection.getCallerClass();
+            if(caller.getClassLoader() != cl)
+            {
+                is = caller.getClassLoader().getResourceAsStream(name);
+            }
+
+            if(is == null && Integer.class.getClassLoader() != cl)
+            {
+                is = caller.getClassLoader().getResourceAsStream(name);
+            }
+        }
+
+        return is;
     }
 
     /**

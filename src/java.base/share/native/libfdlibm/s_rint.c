@@ -36,6 +36,10 @@
 
 #include "fdlibm.h"
 
+//mymod
+#include <cph/cph.h>
+#if !_cph_os_ems
+
 #ifdef __STDC__
 static const double
 #else
@@ -95,3 +99,7 @@ TWO52[2]={
         w = TWO52[sx]+x;
         return w-TWO52[sx];
 }
+
+//mymod
+#endif // #if !_cps_osems
+
